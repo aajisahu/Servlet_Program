@@ -12,31 +12,42 @@ import java.io.PrintWriter;
 
 @WebServlet(
         description = "Login Servlet Testing",
-        urlPatterns = {"/LoginServlet"},
+        urlPatterns = { "/LoginServlet" },
         initParams = {
-                @WebInitParam(name = "user", value = "ashish"),
-                @WebInitParam(name = "password", value = "ashish")
+                @WebInitParam(name = "user", value = "Ashish"),
+                @WebInitParam(name = "password", value = "Ashishsahu@1")
         }
 )
- public class LoginServlet extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-                // get request param for usr and password
-                String user=req.getParameter("Ashish");
-                String pwd=req.getParameter("Bridgelabz");
-                //get servlet config init params
-            String userID=getServletConfig().getInitParameter("user");
-            String password=getServletConfig().getInitParameter("password");
-            if (userID.equals(user) && password.equals(pwd)){
-                    req.setAttribute("user",user);
-                    req.getRequestDispatcher("LoginSuccess.jsp" ).forward(req,resp);
 
-            }
-            else {
-                RequestDispatcher rd=getServletContext().getRequestDispatcher("/login.html");
-                PrintWriter out= resp.getWriter();
-                out.println("<font color=red> Either User Name Or Password is Wrong </font> ");
-                rd.include(req,resp);
-            }
+public class LoginServlet extends HttpServlet{
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        //get request parameters for user ID and password
+        String user = req.getParameter("user");
+        String pwd = req.getParameter("pwd");
+
+        // get servlet config init params
+        String userID = getServletConfig().getInitParameter("user");
+        String password = getServletConfig().getInitParameter("password");
+
+        // UC3 : Validating name of the user
+        String nameValidate = "^[A-Z][a-z]{5}";
+
+        // UC4 : Validating password of the user
+        String passwordValidate = "^(?=.*[0-9])(?=[^@#$%^&+=]*[@#$%^&+=][^@#$%^&+=]*$)(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+
+        if(userID.equals(user) && userID.matches(nameValidate) && password.equals(pwd) && password.matches(passwordValidate)) {
+            req.setAttribute("user",user);
+            req.getRequestDispatcher("LoginSuccess.jsp").forward(req, resp);
+        } else {
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+            PrintWriter out  = resp.getWriter();
+            out.println("<font color = red> Either username or password is wrong</font>");
+            rd.include(req, resp);
         }
+
+    }
+
 }
